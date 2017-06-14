@@ -11,25 +11,28 @@ class Invoice extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $invoice_number;
+
     /**
      * Create a new message instance.
-     *
+     * @param $invoice_number
      */
-    public function __construct()
+    public function __construct($invoice_number)
     {
-        //
+        $this->invoice_number = $invoice_number;
     }
 
     /**
      * Build the message.
-     *
      * @return $this
+     * @internal param Invoice $invoice
      */
     public function build()
     {
         return $this->view('email.invoice')
-                    ->from('postmaster@sandboxf3b765a1730747919ec0eac95d352b6a.mailgun.org')
-                    ->to('info@palmarius.com.ve')
-                    ->subject('Hello Elio Acosta');
+                    ->from('jjjwindowsanddoors@gmail.com')
+                    ->to('geisonfl@aol.com ')
+                    ->subject('Invoice')
+                    ->attach('invoices/'.$this->invoice_number.'.pdf');
     }
 }

@@ -1,1 +1,1 @@
-<h1>Gracias por subscribirte!</h1>
+<h1>Hi!</h1>

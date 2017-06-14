@@ -1,0 +1,9 @@
+.panel-primary > .panel-heading, .btn-primary{
+    color: #fdfdfd !important;
+    background-color: #384047 !important;
+    border-color: #384047;
+}
+
+.btn-primary {
+
+}

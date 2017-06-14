@@ -15,10 +15,10 @@ class CreateInvoicesTable extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('number');
-            $table->date('date');
-            $table->text('bill_to');
-            $table->text('ship_to');
+            $table->string('number')->nullable();
+            $table->date('date')->nullable();
+            $table->text('bill_to')->nullable();
+            $table->text('ship_to')->nullable();
             $table->string('file_path')->nullable();
             $table->timestamps();
         });

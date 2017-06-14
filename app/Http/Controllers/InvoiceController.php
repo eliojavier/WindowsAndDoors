@@ -65,15 +65,16 @@ class InvoiceController extends Controller
             $total += $detail->total_item;
         }
 
-//        Mail::send(new \App\Mail\Invoice());
-        
+
         $invoice->file_path = 'invoices/'.$invoice->number.'.pdf';
         
         $pdf = PDF::loadView('invoices.pdf', compact('invoice', 'total'))->setPaper('a4', 'portrait');
         $pdf->save($invoice->file_path);
         
         $invoice->update();
-        
+
+        Mail::send(new \App\Mail\Invoice($invoice->number));
+
         return $pdf->save('invoices/'.$invoice->number.'.pdf')->stream('invoice.pdf');
     }
 

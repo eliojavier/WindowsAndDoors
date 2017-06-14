@@ -15,11 +15,11 @@ class CreateDetailsTable extends Migration
     {
         Schema::create('details', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('item_code');
-            $table->string('description');
-            $table->float('quantity');
-            $table->float('price_each');
-            $table->float('total_item');
+            $table->string('item_code')->nullable();
+            $table->string('description')->nullable();
+            $table->float('quantity')->nullable();
+            $table->float('price_each')->nullable();
+            $table->float('total_item')->nullable();
             $table->integer('invoice_id')->unsigned();
             $table->timestamps();
 
