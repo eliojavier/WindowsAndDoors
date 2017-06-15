@@ -1,13 +1,13 @@
 <div class="col-md-3">
     <div class="form-group">
         {!! Form::label('Item code', '') !!}
-        {!! Form::text('item_code[]', old('item_code[]'), ['class' => 'form-control']) !!}
+        {!! Form::text('item_code[]', '', ['class' => 'form-control item']) !!}
     </div>
 </div>
 <div class="col-md-5">
     <div class="form-group">
         {!! Form::label('Description', '') !!}
-        {!! Form::text('description[]', old('description[]'), ['class' => 'form-control']) !!}
+        {!! Form::text('description[]', old('description[]'), ['class' => 'form-control description', 'id' => 'description']) !!}
     </div>
 </div>
 <div class="col-md-1">

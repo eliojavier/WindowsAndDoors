@@ -43,7 +43,14 @@
                         <div class="row" id="item-row">
 
                         </div>
-                        <invoice-item></invoice-item>
+
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                {!! Form::label('Down Payment', '') !!}
+                                {!! Form::text('down_payment', '', ['class' => 'form-control']) !!}
+                            </div>
+                        </div>
+
                         <div class="form-group text-center">
                             {!! Form::submit('Aceptar', ['class'=>'btn btn-primary', 'type'=>'submit']) !!}
                         </div>
@@ -59,6 +66,8 @@
     <script src="{{ asset('js/summernote.min.js') }}"></script>
     {{--<script src="https://unpkg.com/vue"></script>--}}
     <script>
+
+
         $('#sn_bill_to').summernote({
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']]
@@ -72,18 +81,18 @@
             height: 150
         });
 
-
         $('#add-row').click(function () {
-            var elem ='<div class="col-md-3">' +
+            var elem ='<div id="item-parent">' +
+                    '<div class="col-md-3">' +
                     '<div class="form-group">' +
                     '{!! Form::label('Item code', '') !!}' +
-                    '{!! Form::text('item_code[]', '', ['class' => 'form-control']) !!}' +
+                    '{!! Form::text('item_code[]', '', ['class' => 'form-control item']) !!}' +
                     '</div>' +
                     '</div>' +
                     '<div class="col-md-5">' +
                     '<div class="form-group">' +
                     '{!! Form::label('Description', '') !!}' +
-                    '{!! Form::text('description[]', '', ['class' => 'form-control']) !!}' +
+                    '{!! Form::text('description[]', '', ['class' => 'form-control description', 'id' => 'description']) !!}' +
                     '</div>' +
                     '</div>' +
                     '<div class="col-md-1">' +
@@ -97,8 +106,30 @@
                     '{!! Form::label('Price each', '') !!}' +
                     '{!! Form::text('price_each[]', '', ['class' => 'form-control']) !!}' +
                     '</div>' +
+                    '</div>' +
                     '</div>';
             $('#item-row').append($(elem));
+        });
+
+        let description = 'Includes: removal of existing windows/doors, Installation of new windows/doors.' +
+                ' JJJ WINDOWS & DOORS  will not be responsible for: Interior drywall/sheetrock/compound, ' +
+                'plaster or any type of finish, replacement of windows sills, removal/relocation/repairs ' +
+                ' of alarm system or its components, floors, paintings or landscaping.' +
+                ' While we do take steps to manage debris in and around the property, please keep in mind ' +
+                'that replacement of windows and doors is a structural modification to your home or ' +
+                'business. We strongly advise you to protect items that you feel require special ' +
+                'attention (I.E. Computers, Furniture, Art)';
+
+        $('.item').focusout(function () {
+            if ($('.item').val() == 'Installation') {
+                $('.description').val(description);
+            }
+        });
+
+        $('#item-row').on('focusout', '.item', function() {
+            if ($(this).val() == 'Installation') {
+                $(this).closest('#item-parent').find('.description').val(description);
+            }
         });
     </script>
 @endsection

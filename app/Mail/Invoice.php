@@ -31,7 +31,7 @@ class Invoice extends Mailable
     {
         return $this->view('email.invoice')
                     ->from('jjjwindowsanddoors@gmail.com')
-                    ->to('geisonfl@aol.com ')
+                    ->to('geisonfl@aol.com')
                     ->subject('Invoice')
                     ->attach('invoices/'.$this->invoice_number.'.pdf');
     }

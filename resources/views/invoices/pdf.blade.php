@@ -12,6 +12,9 @@
             background-color: gainsboro;
             text-align: center;
         }
+        body {
+            font-size: 1.2em;
+        }
     </style>
 {{--<link rel="stylesheet" href="css/pdf.css">--}}
 {{--<link rel="stylesheet" href="css/app.css">--}}
@@ -30,18 +33,14 @@
             <h1><strong>INVOICE</strong></h1>
         </div>
     </div>
-    <br>
     <div class="row">
         <div class="col-md-12">
             <h4><strong>JJJ WINDOWS & DOORS <br>
                     INSTALLATION CORP</strong></h4>
-            <p>9911 W OKEECHOBEE RD APT 510 <br>
-                HIALEAH GARDENS, FL 33016</p>
+            {{--<p>9911 W OKEECHOBEE RD APT 510 <br>--}}
+                {{--HIALEAH GARDENS, FL 33016</p>--}}
         </div>
     </div>
-
-    <br>
-
     <div class="row">
         <div class="col-md-12">
             <h4><strong>Invoice #: </strong> {{$invoice->number}}</h4>
@@ -52,8 +51,6 @@
             <h4><strong>Date: </strong> {{$invoice->date}}</h4>
         </div>
     </div>
-
-    <br><br>
 
     <div class="row">
         <div class="col-md-12">
@@ -66,40 +63,40 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>{!!html_entity_decode($invoice->bill_to)!!}</td>
-                    <td>{!!html_entity_decode($invoice->ship_to)!!}</td>
+                    <td class="text-justify">{!!html_entity_decode($invoice->bill_to)!!}</td>
+                    <td class="text-justify">{!!html_entity_decode($invoice->ship_to)!!}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>P.O. #</th>
-                    <th>Rep</th>
-                    <th>Ship</th>
-                    <th>Via</th>
-                    <th>F.O.B.</th>
-                    <th>Project</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    {{--<div class="row">--}}
+        {{--<div class="col-md-12">--}}
+            {{--<table class="table table-bordered">--}}
+                {{--<thead>--}}
+                {{--<tr>--}}
+                    {{--<th>P.O. #</th>--}}
+                    {{--<th>Rep</th>--}}
+                    {{--<th>Ship</th>--}}
+                    {{--<th>Via</th>--}}
+                    {{--<th>F.O.B.</th>--}}
+                    {{--<th>Project</th>--}}
+                {{--</tr>--}}
+                {{--</thead>--}}
+                {{--<tbody>--}}
+                {{--<tr>--}}
+                    {{--<td></td>--}}
+                    {{--<td></td>--}}
+                    {{--<td></td>--}}
+                    {{--<td></td>--}}
+                    {{--<td></td>--}}
+                    {{--<td></td>--}}
+                {{--</tr>--}}
+                {{--</tbody>--}}
+            {{--</table>--}}
+        {{--</div>--}}
+    {{--</div>--}}
 
     <div class="row">
         <div class="col-md-12">
@@ -108,19 +105,19 @@
                 <tr>
                     <th>Item-code</th>
                     <th>Description</th>
-                    <th>Quantity</th>
-                    <th>Price each</th>
+                    <th>Qty.</th>
+                    <th>Unit price</th>
                     <th>Amount</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($invoice->details as $detail)
                 <tr>
-                    <td>{{$detail->item_code}}</td>
-                    <td>{{$detail->description}}</td>
-                    <td>{{$detail->quantity}}</td>
-                    <td>{{$detail->price_each}}</td>
-                    <td>{{$detail->total_item}}</td>
+                    <td class="text-justify">{{$detail->item_code}}</td>
+                    <td class="text-justify">{{$detail->description}}</td>
+                    <td class="text-justify">{{$detail->quantity}}</td>
+                    <td class="text-justify">{{$detail->price_each}}</td>
+                    <td class="text-justify">{{$detail->total_item}}</td>
                 </tr>
                 @endforeach
                 </tbody>
@@ -130,8 +127,17 @@
 
     <div class="row">
         <div class="col-md-12 text-right">
-            <h4><strong>Total: </strong>{{$total}}</h4>
-            <h3><strong>Balance due: </strong>{{$total}}</h3>
+            <h5><strong>Subtotal: </strong>{{$subtotal}}$</h5>
+            <h5><strong>Sales Tax (7.0%): </strong>{{$tax}}$</h5>
+            <h5><strong>Down payment: </strong>{{$down_payment}}$</h5>
+            <br>
+            <h3><strong>Balance due: </strong>{{$total}}$</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h5>Signature: ____________________</h5>
         </div>
     </div>
 </div>

@@ -44,6 +44,7 @@ class InvoiceController extends Controller
         $invoice->date = $request->date;
         $invoice->bill_to = $request->bill_to;
         $invoice->ship_to = $request->ship_to;
+        $invoice->down_payment = $request->down_payment;
         $invoice->save();
 
         $total_items = sizeof($request->item_code);
@@ -60,22 +61,33 @@ class InvoiceController extends Controller
             $detail->save();
         }
 
-        $total = 0;
+        $subtotal = 0;
         foreach($invoice->details as $detail){
-            $total += $detail->total_item;
+            $subtotal += $detail->total_item;
         }
 
+        
+        $tax = $subtotal * 0.07;
+
+        $down_payment = 0;
+        if ($invoice->down_payment != null){
+            $down_payment = $invoice->down_payment;
+        }
+        $total = $subtotal + $tax - $down_payment;
 
         $invoice->file_path = 'invoices/'.$invoice->number.'.pdf';
-        
-        $pdf = PDF::loadView('invoices.pdf', compact('invoice', 'total'))->setPaper('a4', 'portrait');
-        $pdf->save($invoice->file_path);
-        
+
         $invoice->update();
+
+        $pdf = PDF::loadView('invoices.pdf', compact('invoice', 'subtotal', 'tax', 'down_payment', 'total'))->setPaper('a4', 'portrait');
+        $pdf->save($invoice->file_path);
+
 
         Mail::send(new \App\Mail\Invoice($invoice->number));
 
-        return $pdf->save('invoices/'.$invoice->number.'.pdf')->stream('invoice.pdf');
+//        return $pdf->save('invoices/'.$invoice->number.'.pdf')->stream('invoice.pdf');
+        return $pdf->stream('invoice.pdf');
+//        return $pdf->stream('invoice.pdf');
     }
 
     /**

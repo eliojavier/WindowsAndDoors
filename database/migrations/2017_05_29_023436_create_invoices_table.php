@@ -19,6 +19,7 @@ class CreateInvoicesTable extends Migration
             $table->date('date')->nullable();
             $table->text('bill_to')->nullable();
             $table->text('ship_to')->nullable();
+            $table->float('down_payment')->nullable();
             $table->string('file_path')->nullable();
             $table->timestamps();
         });
