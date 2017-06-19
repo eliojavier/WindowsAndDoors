@@ -127,11 +127,11 @@
 
     <div class="row">
         <div class="col-md-12 text-right">
-            <h5><strong>Subtotal: </strong>{{$subtotal}}$</h5>
-            <h5><strong>Sales Tax (7.0%): </strong>{{$tax}}$</h5>
-            <h5><strong>Down payment: </strong>{{$down_payment}}$</h5>
+            <h5><strong>Subtotal: </strong>{{number_format($subtotal)}}$</h5>
+            <h5><strong>Sales Tax (7.0%): </strong>{{number_format($tax, 2)}}$</h5>
+            <h5><strong>Down payment: </strong>{{number_format($down_payment, 2)}}$</h5>
             <br>
-            <h3><strong>Balance due: </strong>{{$total}}$</h3>
+            <h3><strong>Balance due: </strong>{{number_format($total, 2)}}$</h3>
         </div>
     </div>
 

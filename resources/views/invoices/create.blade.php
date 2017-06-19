@@ -67,7 +67,6 @@
     {{--<script src="https://unpkg.com/vue"></script>--}}
     <script>
 
-
         $('#sn_bill_to').summernote({
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']]
@@ -111,7 +110,7 @@
             $('#item-row').append($(elem));
         });
 
-        let description = 'Includes: removal of existing windows/doors, Installation of new windows/doors.' +
+        var description = 'Includes: removal of existing windows/doors, Installation of new windows/doors.' +
                 ' JJJ WINDOWS & DOORS  will not be responsible for: Interior drywall/sheetrock/compound, ' +
                 'plaster or any type of finish, replacement of windows sills, removal/relocation/repairs ' +
                 ' of alarm system or its components, floors, paintings or landscaping.' +
@@ -121,7 +120,8 @@
                 'attention (I.E. Computers, Furniture, Art)';
 
         $('.item').focusout(function () {
-            if ($('.item').val() == 'Installation') {
+//            if ($('.item').val() == 'Installation') {
+            if ($.trim($('.item').val()) == 'Installation') {
                 $('.description').val(description);
             }
         });
