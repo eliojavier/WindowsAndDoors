@@ -9,12 +9,21 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
+                <a href="invoices/create">
+                    <button class="btn btn-primary">Create Invoice</button>
+                </a>
+            </div>
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
                 <div class="table-responsive col-md-12">
                     <table id="invoices_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead>
                         <tr>
                             <th>Number</th>
                             <th>Date</th>
+                            <th>Bill To</th>
                             <th>Ver</th>
                         </tr>
                         </thead>
@@ -23,6 +32,7 @@
                             <tr>
                                 <td>{{$invoice->number}}</td>
                                 <td>{{$invoice->date}}</td>
+                                <td>{!!html_entity_decode($invoice->bill_to)!!}</td>
                                 <td>
                                     <a href="{{ asset('invoices/' . $invoice->number . '.pdf') }}" target="_blank">
                                         <button type="button" class="btn btn-primary">
@@ -44,8 +54,10 @@
     <script src="{{ asset('js/datatables.min.js') }}"></script>
 
     <script>
-        $(document).ready(function(){
-            $('#invoices_table').DataTable();
+        $(document).ready(function () {
+            $('#invoices_table').DataTable({
+                "order": [[0, "desc"]]
+            });
         });
     </script>
 @endsection

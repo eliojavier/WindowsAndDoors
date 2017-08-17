@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Detail;
 use App\Invoice;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class InvoiceController extends Controller
@@ -17,7 +19,23 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::all();
+
+//        DB::select(DB::raw('SELECT i.name as ingrediente, COUNT(i.id) AS usos
+//                                                        FROM ingredients i, ingredient_recipe ir
+//                                                        WHERE ir.ingredient_id = i.id
+//                                                        GROUP BY i.name, i.id
+//                                                        ORDER BY usos DESC '));
+        
+        $invoices = Invoice::select('number', 'date', 'bill_to')->orderBy('number', 'DESC')->distinct();
+        $invoices = Invoice::distinct()->get();
+        
+        $invoices = DB::table('invoices')
+            ->distinct(['number'])
+            ->get();
+//        dd($invoices);
+        $invoices = DB::select(DB::raw('SELECT DISTINCT (number), date, bill_to FROM invoices ORDER BY number DESC'));
+//        $invoices = Invoice::orderBy('number', 'DESC')->distinct()->get();
+
         return view ('invoices.index', compact('invoices'));
     }
 
@@ -28,7 +46,11 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        return view('invoices.create');
+        $last_id = Invoice::max('number');
+        $invoice_number = $last_id + 1;
+        
+        $current_date = Carbon::now();
+        return view('invoices.create', compact('invoice_number', 'current_date'));
     }
 
     /**
@@ -42,20 +64,30 @@ class InvoiceController extends Controller
         $invoice = new Invoice();
         $invoice->number = $request->number;
         $invoice->date = $request->date;
-        $invoice->bill_to = $request->bill_to;
-        $invoice->ship_to = $request->ship_to;
-        $invoice->down_payment = $request->down_payment;
+        $invoice->bill_to = $request->billTo;
+        $invoice->ship_to = $request->shipTo;
+        $invoice->subtotal = $request->subtotal;
+        $invoice->down_payment = $request->downPayment;
+        $invoice->total = $request->total;
         $invoice->save();
 
-        $total_items = sizeof($request->item_code);
+        $items = $request->items;
 
-        for ($i = 0; $i < $total_items; $i++) {
+        $tax = 0;
+
+        foreach($items as $item)
+        {
             $detail = new Detail();
-            $detail->item_code = $request->item_code[$i];
-            $detail->description = $request->description[$i];
-            $detail->quantity = $request->quantity[$i];
-            $detail->price_each = $request->price_each[$i];
-            $detail->total_item = $request->quantity[$i] * $request->price_each[$i];
+            $detail->item_code = $item["itemCode"];
+            $detail->description = $item["description"];
+            $detail->quantity = $item["quantity"];
+            $detail->price_each = $item["priceEach"];
+            $detail->total_item = $item["quantity"] * $item["priceEach"];
+
+            if(trim($detail->item_code) != 'Installation'){
+                $detail->item_tax = $detail->price_each * 0.07;
+                $tax += $detail->price_each * 0.07;
+            }
 
             $detail->invoice()->associate($invoice);
             $detail->save();
@@ -66,8 +98,7 @@ class InvoiceController extends Controller
             $subtotal += $detail->total_item;
         }
 
-        
-        $tax = $subtotal * 0.07;
+//        $tax = $subtotal * 0.07;
 
         $down_payment = 0;
         if ($invoice->down_payment != null){
@@ -78,15 +109,19 @@ class InvoiceController extends Controller
         $invoice->file_path = 'invoices/'.$invoice->number.'.pdf';
 
         $invoice->update();
-
+        
         $pdf = PDF::loadView('invoices.pdf', compact('invoice', 'subtotal', 'tax', 'down_payment', 'total'))->setPaper('a4', 'portrait');
         $pdf->save($invoice->file_path);
 
+        return response()->json(['success' => true, 'path'=>$invoice->file_path]);
+//        return $pdf->stream('invoice.pdf');
 
-        Mail::send(new \App\Mail\Invoice($invoice->number));
+
+//        Mail::send(new \App\Mail\Invoice($invoice->number));
 
 //        return $pdf->save('invoices/'.$invoice->number.'.pdf')->stream('invoice.pdf');
-        return $pdf->stream('invoice.pdf');
+//        return redirect('admin/invoices');
+//        return $pdf->stream('invoice.pdf');
 //        return $pdf->stream('invoice.pdf');
     }
 

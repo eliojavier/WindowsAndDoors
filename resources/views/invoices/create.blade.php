@@ -8,6 +8,14 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+                <a href="../invoices">
+                    <button class="btn btn-primary">View Invoices</button>
+                </a>
+            </div>
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col-md-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading text-center"><strong>Invoice data</strong></div>
                     <div class="panel-body">
@@ -15,11 +23,11 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 {!! Form::label('Invoice number', '') !!}
-                                {!! Form::text('number', old('number'), ['class' => 'form-control', 'placeholder' => 'Invoice number']) !!}
+                                {!! Form::text('number', $invoice_number, ['class' => 'form-control', 'placeholder' => 'Invoice number']) !!}
                             </div>
                             <div class="form-group col-md-6">
                                 {!! Form::label('Date', '') !!}
-                                {!! Form::date('date', old('date'), ['class' => 'form-control']) !!}
+                                {!! Form::date('date', $current_date, ['class' => 'form-control']) !!}
                             </div>
                         </div>
                         <div class="row">
@@ -47,7 +55,7 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 {!! Form::label('Down Payment', '') !!}
-                                {!! Form::text('down_payment', '', ['class' => 'form-control']) !!}
+                                {!! Form::text('down_payment', 0, ['class' => 'form-control']) !!}
                             </div>
                         </div>
 

@@ -19,6 +19,7 @@ class CreateDetailsTable extends Migration
             $table->text('description')->nullable();
             $table->float('quantity')->nullable();
             $table->float('price_each')->nullable();
+            $table->float('item_tax')->nullable();
             $table->float('total_item')->nullable();
             $table->integer('invoice_id')->unsigned();
             $table->timestamps();
