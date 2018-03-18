@@ -13,7 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['prefix'=>'admin'], function() {
+Route::group(['prefix'=>'admin', 'middleware' => ['web']], function() {
+    Route::get('invoices/{invoice}/email', 'InvoiceController@sendByEmail');
+    Route::get('invoices/{invoice}/download', 'InvoiceController@download');
     Route::resource('invoices', 'InvoiceController');
 });
+
+Route::get('invoice/generate', 'InvoiceController@generateInvoice');
 

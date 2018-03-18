@@ -22,7 +22,8 @@ class CreateInvoicesTable extends Migration
             $table->float('subtotal')->nullable();
             $table->float('down_payment')->nullable();
             $table->float('total')->nullable();
-            $table->string('file_path')->nullable();
+            $table->string('path')->nullable();
+            $table->string('full_path')->nullable();
             $table->timestamps();
         });
     }

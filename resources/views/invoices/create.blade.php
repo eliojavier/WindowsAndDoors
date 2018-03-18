@@ -20,6 +20,7 @@
                     <div class="panel-heading text-center"><strong>Invoice data</strong></div>
                     <div class="panel-body">
                         {!! Form::open(['url' => 'admin/invoices']) !!}
+                        {!! csrf_field() !!}
                         <div class="row">
                             <div class="form-group col-md-6">
                                 {!! Form::label('Invoice number', '') !!}

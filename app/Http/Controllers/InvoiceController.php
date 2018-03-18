@@ -19,24 +19,10 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-
-//        DB::select(DB::raw('SELECT i.name as ingrediente, COUNT(i.id) AS usos
-//                                                        FROM ingredients i, ingredient_recipe ir
-//                                                        WHERE ir.ingredient_id = i.id
-//                                                        GROUP BY i.name, i.id
-//                                                        ORDER BY usos DESC '));
-        
-        $invoices = Invoice::select('number', 'date', 'bill_to')->orderBy('number', 'DESC')->distinct();
-        $invoices = Invoice::distinct()->get();
-        
-        $invoices = DB::table('invoices')
-            ->distinct(['number'])
-            ->get();
-//        dd($invoices);
-        $invoices = DB::select(DB::raw('SELECT DISTINCT (number), date, bill_to FROM invoices ORDER BY number DESC'));
-//        $invoices = Invoice::orderBy('number', 'DESC')->distinct()->get();
-
-        return view ('invoices.index', compact('invoices'));
+        $invoices = Invoice::select('id', 'number', 'bill_to', 'full_path')
+                            ->orderBy('updated_at', 'DESC')
+                            ->get();
+        return response()->json(['invoices' => $invoices]);
     }
 
     /**
@@ -106,23 +92,29 @@ class InvoiceController extends Controller
         }
         $total = $subtotal + $tax - $down_payment;
 
-        $invoice->file_path = 'invoices/'.$invoice->number.'.pdf';
+        $invoice->path = 'invoices/'.$invoice->number.'.pdf';
+        $invoice->full_path = 'http://' . $_SERVER['HTTP_HOST'] . '/' . 'invoices/'.$invoice->number.'.pdf';
 
         $invoice->update();
         
         $pdf = PDF::loadView('invoices.pdf', compact('invoice', 'subtotal', 'tax', 'down_payment', 'total'))->setPaper('a4', 'portrait');
-        $pdf->save($invoice->file_path);
+        $pdf->save($invoice->path);
 
-        return response()->json(['success' => true, 'path'=>$invoice->file_path]);
+        return response()->json(['success' => true, 'message' => 'invoice created']);
 //        return $pdf->stream('invoice.pdf');
+        
+    }
 
+    public function generateInvoice()
+    {
+        $invoice = 1507;
+        $subtotal = 3800;
+        $down_payment = 1900;
+        $tax = 0;
+        $total = 1900;
+        $pdf = PDF::loadView('invoices.pdfmanual', compact('invoice', 'subtotal', 'tax', 'down_payment', 'total'))->setPaper('a4', 'portrait');
+        $pdf->save('invoices/1507.pdf');
 
-//        Mail::send(new \App\Mail\Invoice($invoice->number));
-
-//        return $pdf->save('invoices/'.$invoice->number.'.pdf')->stream('invoice.pdf');
-//        return redirect('admin/invoices');
-//        return $pdf->stream('invoice.pdf');
-//        return $pdf->stream('invoice.pdf');
     }
 
     /**
@@ -133,7 +125,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        //
+        return response()->json(['invoice' => $invoice->load('details')]);
     }
 
     /**
@@ -168,5 +160,16 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoice)
     {
         //
+    }
+
+    public function sendByEmail(Invoice $invoice)
+    {
+        Mail::send(new \App\Mail\Invoice($invoice->number));
+    }
+
+    public function download(Invoice $invoice)
+    {
+        $path = 'http://' . $_SERVER['HTTP_HOST'] . '/' .$invoice->full_path;
+        return response()->json(['path' => $path]);
     }
 }

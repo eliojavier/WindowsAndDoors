@@ -30,9 +30,9 @@ class Invoice extends Mailable
     public function build()
     {
         return $this->view('email.invoice')
-                    ->from('jjjwindowsanddoors@gmail.com')
-                    ->to('geisonfl@aol.com')
-                    ->subject('Invoice')
+                    ->from('eacosta@palmarius.com.ve')
+                    ->to('eacosta@palmarius.com.ve')
+                    ->subject('Invoice number ' . $this->invoice_number)
                     ->attach('invoices/'.$this->invoice_number.'.pdf');
     }
 }
